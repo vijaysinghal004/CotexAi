@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const userSchema =new mngoose.Schema({
+const userSchema =new mongoose.Schema({
     firebaseUid:{
         type:String,
         unique:true
@@ -10,6 +10,6 @@ const userSchema =new mngoose.Schema({
     avtar:String
 },{timestamps:true})
 
-const User=mongoose.model("User",userSchema);
+export const User=mongoose.model("User",userSchema);
 
-export default User;
+// export default User;

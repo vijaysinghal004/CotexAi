@@ -6,6 +6,7 @@ import cors from "cors"
 import cookieParser from "cookie-parser";
 import { protect } from "./middleware/auth.middleware.js";
 import { currentuser } from "./controller/userController.js";
+import { proxyWithHeader } from "./utils/proxywithheader.js";
 
 const port=process.env.PORT || 8000;
 
@@ -22,6 +23,7 @@ app.get("/",(req,res)=>{
 })
 
 app.use("/api/auth",proxy(process.env.AUTH_SERVICE));
+app.use("/api/chat",protect,proxyWithHeader(process.env.CHAT_SERVICE));
 app.get("/api/me",protect,currentuser);
 
 app.listen(port,()=>{

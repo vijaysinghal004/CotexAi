@@ -2,10 +2,10 @@ import { signInWithPopup } from 'firebase/auth'
 import React, { useEffect } from 'react'
 import { auth, googleprovider } from '../utils/firebase.js'
 import api from '../utils/axios.js'
-import Home from './Home.jsx'
 import { getcurrentuser } from './features/getCurrentUser.js'
 import { useDispatch } from 'react-redux'
 import { setUserData } from './redux/userSclice.js'
+import Home from './pages/Home.jsx'
 
 
 const App = () => {

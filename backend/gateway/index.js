@@ -7,6 +7,7 @@ import cookieParser from "cookie-parser";
 import { protect } from "./middleware/auth.middleware.js";
 import { currentuser } from "./controller/userController.js";
 import { proxyWithHeader } from "./utils/proxywithheader.js";
+import morgen from "morgan"
 
 const port=process.env.PORT || 8000;
 
@@ -17,6 +18,7 @@ app.use(cors({
 }))
 
 app.use(cookieParser());
+app.use(morgen("dev"))
 
 app.get("/",(req,res)=>{
     res.send("Gateway server is running")

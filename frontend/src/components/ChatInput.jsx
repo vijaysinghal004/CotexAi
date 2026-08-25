@@ -4,21 +4,40 @@ import { useDispatch, useSelector } from 'react-redux';
 import { sendMessage } from '../features/sendMessage';
 import { addMessage, setMessages } from '../redux/messageSlice';
 import Markdown from 'react-markdown'
+import { createConversation } from '../features/createConversation';
+import { addConversation, setConvTittle, setSelectConversation } from '../redux/conversationSlice';
+import { updatetittle } from '../features/updateConversation';
+
 
 const ChatInput = () => {
     const [value, setValue] = useState("");
     const { selectedConversation } = useSelector(state => state.conversation);
-           const {messages}=useSelector(state=>state.message);
-    const dispatch=useDispatch();
+    const { messages } = useSelector(state => state.message);
+    const dispatch = useDispatch();
     const handleChatMessage = async () => {
+    let conversation=selectedConversation
+        if(!conversation){
+          const conv=  await createConversation()
+          dispatch(addConversation(conv))
+          dispatch(setSelectConversation(conv));
+          conversation=conv
+        }
+
+        if(conversation.tittle=="New Chat"){
+            await updatetittle({id:conversation._id,tittle:value.trim()})
+            dispatch(setConvTittle({conversationId:conversation._id,tittle:value.slice(0.40)}))
+        }
+
+
+
         const payload = {
             prompt: value,
-            conversationId: selectedConversation?._id
+            conversationId: conversation?._id
         }
-        dispatch(addMessage({role:"user",content:value.trim()}))
+        dispatch(addMessage({ role: "user", content: value.trim() }))
         setValue("");
-        const data=await sendMessage(payload)
-                dispatch(addMessage({role:"assistant",content:data.trim()}))
+        const data = await sendMessage(payload)
+        dispatch(addMessage({ role: "assistant", content: data?.trim() }))
         console.log(data)
     }
     return (
@@ -41,7 +60,7 @@ const ChatInput = () => {
                         </button>
                     </div>
                     <button
-                    onClick={handleChatMessage}
+                        onClick={handleChatMessage}
                         disabled={value.length == 0}
                         className={`flex items-center justify-center w-8 h-8 rounded-lg border-none cursor-pointer transition-all duration-150 ${value ? " bg-linear-to-br from-indigo-500 to-violet-700 hover:opacity-90 text-white" : " bg-white/[0.05] text-slate-600 cursor-not-allowed"} `}>
                         <Send size={15} />

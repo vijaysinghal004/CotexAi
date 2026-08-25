@@ -43,7 +43,8 @@ if (collapsed) {
 
       <button
         className='flex items-center justify-center w-9 h-9 rounded-xl text-slate-500 hover:text-slate-200 hover:bg-white/[0.05] transition-colors duration-150 bg-transparent border-none cursor-pointer'
-        onClick={handleConversation}
+        // onClick={handleConversation}
+        onClick={()=>dispatch(setSelectConversation(null))}
       >
         <Plus size={17} />
       </button>
@@ -103,12 +104,18 @@ if (collapsed) {
                         free
                     </span>
 
-                    <button onClick={handleConversation} className="flex items-center justify-center w-7 h-7 rounded-lg text-slate-500 hover:text-slate-200 hover:bg-white/[0.05] transition-colors duration-150 bg-transparent border-none cursor-pointer">
+                    <button 
+                            onClick={()=>dispatch(setSelectConversation(null))}
+                    // onClick={handleConversation}
+                     className="flex items-center justify-center w-7 h-7 rounded-lg text-slate-500 hover:text-slate-200 hover:bg-white/[0.05] transition-colors duration-150 bg-transparent border-none cursor-pointer">
                         <PenSquare size={14} />
                     </button>
                 </div>
                 <div className='px-4 pt-4 pb-1'>
-                    <div onClick={handleConversation} className='flex w-full items-center justify-center gap-2 text-sm font-medium text-white bg-linear-to-br from-indigo-500 to-violet-700 rounded-xl py-[10px] border-none cursor-pointer hover:opacity-90 transition-opacity duration-150'>
+                    <div 
+                            onClick={()=>dispatch(setSelectConversation(null))}
+                    // onClick={handleConversation} 
+                    className='flex w-full items-center justify-center gap-2 text-sm font-medium text-white bg-linear-to-br from-indigo-500 to-violet-700 rounded-xl py-[10px] border-none cursor-pointer hover:opacity-90 transition-opacity duration-150'>
                         <Plus size={15} /> New Chat
                     </div>
                 </div>
@@ -136,7 +143,7 @@ if (collapsed) {
                                         : "bg-transparent border-transparent  bg-white/[0.05] text-slate-500"} `}>
                                         <MessageSquare size={13} />
                                     </div>
-                                    <span className={`text-[13px] font-medium truncate ${isActive ? "text-slate-100" : "text-slate-300"} `}>{conv?.title || "New Chat"}</span>
+                                    <span className={`text-[13px] font-medium truncate ${isActive ? "text-slate-100" : "text-slate-300"} `}>{conv?.tittle || "New Chat"}</span>
                                 </div>
                             );
                         })}

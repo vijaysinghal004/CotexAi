@@ -1,15 +1,24 @@
 import { getModel } from "../config/llmModel.js"
 
-export const router=async(state)=>{
-    const llm=await getModel("router");
-    const prompt=`You are an agent router.
+export const router = async (state) => {
+    const llm = await getModel("router");
+
+    if (state.agent && state.agent !== "auto") {
+        return {
+            ...state,
+            agent:  state.agent
+        }
+    }
+
+    const prompt = `You are an agent router.
+
     
     Available agents:
     
     - chat
     - search
     - coding 
-    - pdf
+    - pdf 
     - ppt
     - image
     
@@ -59,13 +68,13 @@ export const router=async(state)=>{
     ${state.prompt}
     `
 
-const response=await llm.invoke(prompt);
-console.log(response);
-return {
-    ...state,
-    agent:response.content
-          .trim()
-          .toLowerCase()
-}
+    const response = await llm.invoke(prompt);
+    console.log(response);
+    return {
+        ...state,
+        agent: response.content
+            .trim()
+            .toLowerCase()
+    }
 
 }

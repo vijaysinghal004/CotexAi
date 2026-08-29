@@ -11,7 +11,8 @@ role:{
 },
 content:{
     type:String
-}
+},
+images:[String]
 
 },{timestamps:true})
 

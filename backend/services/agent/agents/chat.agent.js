@@ -2,14 +2,27 @@ import { AIMessage, HumanMessage, SystemMessage } from "@langchain/core/messages
 import { getModel } from "../config/llmModel.js"
 import { getMemory } from "../config/memeory.js";
 
-export const chatAgent=async (state)=>{
-    const llm= await getModel("chat")
+export const chatAgent = async (state) => {
+    const llm = await getModel("chat")
 
     console.log(state?.conversationId);
-    const history= await getMemory(state?.conversationId)
+    const history = await getMemory(state?.conversationId)
     console.log(history);
-const prompt = `
+  const searchContext= state.searchResults ? ` 
+  Web Search Results:
+  ${JSON.stringify(state.searchResults)}
+  Answer the user using only the above search results.    
+  `:""
+
+
+    const prompt = `
 You are CortexAI, an intelligent AI assistant.
+
+${searchContext}
+
+if searchContext is exists:
+-Use search Results to answer.
+-Do not mention internal tools.
 
 Rules:
 
@@ -26,39 +39,39 @@ Formatting:
 - Keep paragraphs short and readable.
 - Never write headings and content on the same line.
 - Never generate large walls of text.
-`;   
-const messages=[
-    new SystemMessage(prompt),
-];
+`;
+    const messages = [
+        new SystemMessage(prompt),
+    ];
 
 
-(history|| []).forEach(msg=>{
-    if(msg?.role=="user"){
-        messages.push(new HumanMessage(msg?.content))
-    }else{
-        messages.push(new AIMessage(msg?.content))
-    }
-})
-messages.push(new HumanMessage(state.prompt))
+    (history || []).forEach(msg => {
+        if (msg?.role == "user") {
+            messages.push(new HumanMessage(msg?.content))
+        } else {
+            messages.push(new AIMessage(msg?.content))
+        }
+    })
+    messages.push(new HumanMessage(state.prompt))
 
-// console.log(messages);
+    // console.log(messages);
 
-const response=await llm.invoke(messages)
-// const response={content:"hii"}
-    
-// const response=await llm.invoke([
-//         {
-//             "role":"system",
-//             "content":prompt
-//         },
-//         {
-//             "role":"human",
-//             "content":state.prompt
-//         }
-//     ]);
+    const response = await llm.invoke(messages)
+    // const response={content:"hii"}
+
+    // const response=await llm.invoke([
+    //         {
+    //             "role":"system",
+    //             "content":prompt
+    //         },
+    //         {
+    //             "role":"human",
+    //             "content":state.prompt
+    //         }
+    //     ]);
 
     return {
         ...state,
-        aiResponse:response.content
+        aiResponse: response.content
     }
 } 

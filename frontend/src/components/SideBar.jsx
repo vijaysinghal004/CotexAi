@@ -89,7 +89,7 @@ if (collapsed) {
     return (
         <div className='fixed lg:static inset-y-0 left-0 z-50 w-[270px] h-screen shrink-0 bg-[#0d0f14] border-r border-white/[0.06] '>
             <div className='flex flex-col h-full'>
-                <div className=" strink-0 flex items-center  gap-2.5 px-4 py-4 border-b border-white/[0.06]  ">
+                <div className=" shrink-0 flex items-center  gap-2.5 px-4 py-4 border-b border-white/[0.06]  ">
                     <div className='hidden lg:flex items-center justify-center w-7 h-7 rounded-lg text-slate-500 hover:text-slate-200 hover:bg-white/[0.05] transition-colors duration-150 bg-transparent border-none cursor-pointer'
                         onClick={() => setCollapsed(true)}
                     >
@@ -120,7 +120,7 @@ if (collapsed) {
                     </div>
                 </div>
                 {/* /conversation part */}
-                <div>
+                <div className='flex flex-col flex-1 min-h-0'>
                     {conversations.length == 0 ?
                         <div className='px-5 py-4 pb-1.5 text-[10.5px] font-semibold uppercase tracking-widest text-slate-600' >No Recent Conversations</div> :
                         <div className='px-5 py-4 pb-1.5 text-[10.5px] font-semibold uppercase tracking-widest text-slate-600'>Recents</div>
@@ -151,7 +151,7 @@ if (collapsed) {
 
                 </div>
                 {/* //footer */}
-                <div className=' strink-0 mx-2.5 h-px bg-white/[0.06]' />
+                <div className=' shrink-0 mx-2.5 h-px bg-white/[0.06]' />
                 <div className='px-3.5 py-3.5'>
                     {userData ? (
                         <div className='flex items-center gap-2.5 cursor-pointer rounded-xl px-3 py-2.5 hover:bg-white/[0.05] transition-colors duration-150'>

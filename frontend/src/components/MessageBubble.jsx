@@ -26,8 +26,8 @@ const MessageBubble = ({ role, content, images }) => {
       <div
         className={`max-w-[72%] px-4 py-2.5 rounded-2xl text-[13.5px] leading-relaxed 
           ${isUser
-          ? "bg-linear-to-br from-indigo-500 to-violet-700 text-white rounded-tr-sm"
-          : "bg-white/[0.04] border border-white/[0.07] text-slate-200 rounded-tl-sm"
+            ? "bg-linear-to-br from-indigo-500 to-violet-700 text-white rounded-tr-sm"
+            : "bg-white/[0.04] border border-white/[0.07] text-slate-200 rounded-tl-sm"
           }`}
       >
 
@@ -92,6 +92,31 @@ const MessageBubble = ({ role, content, images }) => {
                 <ExternalLink size={14} />
               </a>
             ),
+            // img: ({ src, alt }) => {
+            //   if (!src) return null
+            //   return (
+            //     <img
+            //       src={src}
+            //       alt={alt || "Generated visual"}
+            //       onClick={() => setLightBox(src)}
+            //       loading="lazy"
+            //       onError={(e) => e.currentTarget.remove()}
+            //       className="w-40 h-28 rounded-xl object-cover border border-white/10 cursor-zoom-in hover:opacity-80 transition my-2"
+            //     />
+            //   )
+            // },
+            img: ({ src }) => {
+              if (!src) return null;
+              return (
+                <img
+                  src={src}
+                  onClick={() => setLightBox(src)}
+                  loading="lazy"
+                  onError={(e) => e.currentTarget.remove()}
+                  className="w-65 h-48 rounded-xl object-cover border border-white/10 cursor-zoom-in hover:opacity-80"
+                />
+              );
+            },
             code: ({ className, children }) => {
               const value = String(children).trim();
               if (!className) {
@@ -107,7 +132,7 @@ const MessageBubble = ({ role, content, images }) => {
                     <span className="uppercase text-xs text-slate-400">
                       {language}
                     </span>
-                    <button className='flex items-center gap-1 text-sm' onClick={()=>copycode(value)}>
+                    <button className='flex items-center gap-1 text-sm' onClick={() => copycode(value)}>
                       {
                         copiedCode == value ?
                           <>
@@ -118,18 +143,18 @@ const MessageBubble = ({ role, content, images }) => {
                     </button>
                   </div>
                   <SyntaxHighlighter
-                  language={language}
-                  style={oneDark}
-                  wrapLongLines
-                  showLineNumbers
-                  customStyle={{
-                    margin:0,
-                    padding:"16px",
-                    background:"#0d1117",
-                    fontSize:"13px"
-                  }}
+                    language={language}
+                    style={oneDark}
+                    wrapLongLines
+                    showLineNumbers
+                    customStyle={{
+                      margin: 0,
+                      padding: "16px",
+                      background: "#0d1117",
+                      fontSize: "13px"
+                    }}
                   >
-                  {value}
+                    {value}
                   </SyntaxHighlighter>
                 </div>
               )

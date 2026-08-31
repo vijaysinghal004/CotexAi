@@ -33,7 +33,7 @@ export const router = async (state) => {
     search:
     Current events,
     latest information,
-    nnews,
+    news,
     recent developments,
     internet lookup.
     

@@ -22,11 +22,12 @@ export const agent = async (req, res) => {
         await axios.post(`${process.env.CHAT_SERVICES}/save-message`,
             { conversationId, role: "user", content: prompt })
         await axios.post(`${process.env.CHAT_SERVICES}/save-message`,
-            { conversationId, role: "assistant", content: response, images:result.images })
+            { conversationId, role: "assistant", content: response, images:result.images ,artifacts:result.artifacts})
         // return res.status(200).json(response)
         return res.status(200).json({
             answer:response,
-            images:result.images
+            images:result?.images,
+            artifacts:result?.artifacts
         })
     } catch (err) {
         return res.status(500).json({ message: `agent error ${err}` })

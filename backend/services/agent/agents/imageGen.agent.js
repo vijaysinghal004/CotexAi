@@ -43,7 +43,7 @@ export const imageGenAgent = async (state) => {
     const fileName = `image-${Date.now()}.png`
 
     await uploadToS3(fileName, buffer, "image/png")
-    const downloadUrl = await getFroms3(fileName, 244 * 60 * 60)
+    const downloadUrl = await getFroms3(fileName,  60 * 10)
 
     // return {
     //     ...state,

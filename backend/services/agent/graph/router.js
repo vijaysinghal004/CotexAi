@@ -49,7 +49,7 @@ export const router = async (state) => {
     or ppt context.
     
     ppt:
-    Questions about generate ppts
+    Questions about generate ppt, ppts
     or ppt context.
 
     vision:
@@ -62,6 +62,7 @@ export const router = async (state) => {
     search
     coding
     pdf
+    ppt
     vision
     
     User Query:

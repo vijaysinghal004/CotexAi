@@ -3,6 +3,7 @@ import Message from "../models/message.model.js";
 
 export const createConversation = async (req, res) => {
     try {
+        // console.log(req.headers)
         const userId = req.headers["x-user-id"]
         console.log("userId", userId);
         const conversation = await Conversation.create({

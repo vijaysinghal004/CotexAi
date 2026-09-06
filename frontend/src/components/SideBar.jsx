@@ -6,9 +6,11 @@ import { addConversation, setConversations, setSelectConversation } from '../red
 import { createConversation } from '../features/createConversation';
 import { logout } from '../features/logout';
 import { setUserData } from '../redux/userSclice';
+import BillingDrawn from './BillingDrawn';
 
 const SideBar = () => {
     const [collapsed, setCollapsed] = useState(false);
+    const [showBilling,setShowBilling]=useState(false)
     const [imageError, setImageError] = useState(false);
     const { conversations, selectedConversation } = useSelector(state => state.conversation);
     const { userData } = useSelector(state => state.user)
@@ -170,7 +172,9 @@ if (collapsed) {
                                 <p className='text-[11px] text-slate-600 mt-px'>{"Free Plan"}</p>
                             </div>
                             <div className="flex gap-1">
-                                <button className="flex items-center justify-center w-7 h-7 rounded-[7px] border-none bg-transparent text-yellow-500 cursor-pointer hover:bg-white/[0.08] hover:text-slate-400 transition-all duration-150">
+                                <button className="flex items-center justify-center w-7 h-7 rounded-[7px] border-none bg-transparent text-yellow-500 cursor-pointer hover:bg-white/[0.08] hover:text-slate-400 transition-all duration-150"
+                                onClick={()=>setShowBilling(true)}
+                                >
                                     <Coins size={16} />
                                 </button>
 
@@ -189,6 +193,11 @@ if (collapsed) {
                 </div>
 
             </div>
+            <BillingDrawn
+            open={showBilling}
+            onClose={()=>setShowBilling(false)}
+            />
+
 
 
 

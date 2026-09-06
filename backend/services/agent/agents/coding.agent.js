@@ -1,4 +1,5 @@
 import { getModel } from "../config/llmModel.js"
+import { deductCredits } from "../utils/deductCredits.js";
 
 export const codingAgent = async (state) => {
     const intentLlm = await getModel("intent");
@@ -105,10 +106,12 @@ if (content.startsWith("```")) {
         .replace(/\s*```$/i, "")
         .trim();
 }
+        await deductCredits(state.userId,"coding")
 console.log("CLEAN JSON:", content);
 
 
         const data=JSON.parse(content);
+
         return {
             ...state, 
             aiResponse:"Code Generated successfully",
@@ -153,6 +156,7 @@ console.log("CLEAN JSON:", content);
     `)
 
     const data=res.content
+            await deductCredits(state.userId,"coding")
     return {
         ...state,
         aiResponse:data,

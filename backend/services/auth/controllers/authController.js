@@ -63,7 +63,8 @@ export const updateUserPayment = async (req, res) => {
            return res.status(400).json({ message: "user not found" })
         }
         user.plan = plan;
-        user.credits = credits
+        // user.credits = credits
+        user.credits = (user.credits ?? 0) + Number(credits);
         user.totalCredits = (user.totalCredits ?? 0) + Number(credits);
         // user.totalCredits += credits
         user.planExpiresAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
@@ -71,7 +72,49 @@ export const updateUserPayment = async (req, res) => {
         await user.save()
 
         const sessionId=  await redis.get(`user-session-${user?._id}`)
-        console.log("vijay "+sessionId);
+        // console.log("vijay "+sessionId);
+        await redis.set(`session-${sessionId}`, JSON.stringify({
+            userId: user._id,
+            name: user.name,
+            email: user.email,
+            avtar: user.avtar,
+            plan: user.plan,
+            credits: user.credits,
+            totalCredits: user.totalCredits,
+            planExpiresAt: user.planExpiresAt
+        }), "EX", 7 * 24 * 60 * 60)
+
+
+        return res.status(201).json({ success: true })
+    } catch (err) {
+        return res.status(501).json({ message: "Update user payment error" + err })
+    }
+}
+
+export const deductCredits=async(req,res)=>{
+    try{
+  const {userId,agent}=req.body;
+  const COST    ={
+    chat:1,
+    search:5,
+    coding:10,
+    pdf:10,
+    ppt:10,
+    vision:10
+  }
+
+  const user=await User.findById(userId);
+  if(!user){
+        return res.status(400).json({message:"user not found"})
+  }
+  const requiredCredits=COST[agent]||1
+  if(user.credits<requiredCredits){
+        return res.status(401).json({message:"not enough credits."})
+  }
+  user.credits-=requiredCredits
+  await user.save()
+          const sessionId=  await redis.get(`user-session-${user?._id}`)
+        // console.log("vijay "+sessionId);
         await redis.set(`session-${sessionId}`, JSON.stringify({
             userId: user._id,
             name: user.name,
@@ -83,9 +126,8 @@ export const updateUserPayment = async (req, res) => {
             planExpiresAt: user.planExpiresAt
         }), "EX", 7 * 24 * 60 * 60)
 
-
-        return res.status(201).json({ success: true })
-    } catch (err) {
-        return res.status(501).json({ message: "Update user payment error" + err })
+        return res.status(201).json({ success: true,credits:user.credits })
+    }catch(err){
+        return res.status(501).json({ message: "deduct credits error" + err })
     }
 }

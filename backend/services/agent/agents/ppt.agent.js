@@ -1,4 +1,5 @@
 import { getModel } from "../config/llmModel.js";
+import { deductCredits } from "../utils/deductCredits.js";
 import{ generatePPT } from "../utils/generatePPT.js";
 import { getFroms3 } from "../utils/getFromS3.js";
 import { uploadToS3 } from "../utils/uploadToS3.js";
@@ -41,7 +42,9 @@ Topic:
 
 ${state.prompt}`;
 const res=await llm.invoke(prompt);
+
 const data = JSON.parse(res.content);
+        await deductCredits(state.userId,"ppt")
 console.log(data);
 const ppt=await generatePPT(data);
 const buffer=await ppt.write({

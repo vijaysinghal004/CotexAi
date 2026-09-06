@@ -18,7 +18,7 @@ const userSchema =new mongoose.Schema({
     },
     totalCredits:{
         type:Number,
-        default:500
+        default:100
     },
     planExpiresAt:Date
 },{timestamps:true})

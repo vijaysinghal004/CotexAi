@@ -1,4 +1,5 @@
 import { getModel } from "../config/llmModel.js"
+import { deductCredits } from "../utils/deductCredits.js";
 import { generatePDF } from "../utils/generatePdf.js";
 import { getFroms3 } from "../utils/getFromS3.js";
 import { uploadToS3 } from "../utils/uploadToS3.js";
@@ -40,6 +41,7 @@ ${state.prompt}`;
         console.log(JSON.parse(res.content))
 
         const data = JSON.parse(res.content);
+        await deductCredits(state.userId,"pdf")
 
         const pdfBuffer = await generatePDF(data);
 

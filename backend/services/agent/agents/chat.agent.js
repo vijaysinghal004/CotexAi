@@ -1,6 +1,7 @@
 import { AIMessage, HumanMessage, SystemMessage } from "@langchain/core/messages";
 import { getModel } from "../config/llmModel.js"
 import { getMemory } from "../config/memeory.js";
+import { deductCredits } from "../utils/deductCredits.js";
 
 export const chatAgent = async (state) => {
     try{
@@ -70,6 +71,7 @@ Formatting:
     //             "content":state.prompt
     //         }
     //     ]);
+        await deductCredits(state.userId,"chat")
 
     return {
         ...state,

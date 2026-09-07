@@ -1,11 +1,12 @@
 import { getModel } from "../config/llmModel.js";
 import fs from "fs"
 import { deductCredits } from "../utils/deductCredits.js";
+import { HumanMessage, SystemMessage } from "@langchain/core/messages";
 export const imageAnalyzer = async (state) => {
     try {
         const llm = await getModel("imageAnalyzer");
-        const imageBuffer = await fs.readFile(state.file.path)
-        const base64image = await imageBuffer.toString("base64")
+        const imageBuffer = await fs.readFileSync(state.file.path)
+        const base64Image = await imageBuffer.toString("base64")
         const messages = [
             new SystemMessage(
                 `You are CortexAI image analyzer Agent.
@@ -46,9 +47,9 @@ export const imageAnalyzer = async (state) => {
     } catch (err) {
         return {
             ...state,
-            aiResponse: "Failed to analyze image"
+            aiResponse: "Failed to analyze image"+err
         }
     }finally{
-        fs.unlink(state.file.path)
+        await fs.unlinkSync(state.file.path)
     }
 }

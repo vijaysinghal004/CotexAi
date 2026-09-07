@@ -1,31 +1,31 @@
-import { VectorStore } from "@langchain/core/vectorstores";
 import { RecursiveCharacterTextSplitter } from "@langchain/textsplitters";
 import fs from "fs"
-import { PDFparse } from "pdf-parse"
+import { PDFParse } from 'pdf-parse';
 import { getModel } from "../config/llmModel.js";
-import { HumanMessage } from "@langchain/core/messages";
+import { HumanMessage, SystemMessage } from "@langchain/core/messages";
 import { deductCredits } from "../utils/deductCredits.js";
+import { vectorStore } from "../config/vectorDB.js";
 
 export const pdfRAG = async (state) => {
     try {
         const buffer = fs.readFileSync(state.file.path);
-        const pdf = new PDFparse({
+        const pdf = new PDFParse({
             data: buffer
         })
-        const result = pdf.getText();
+        const result = await pdf.getText();
         const text = result.text
 
         const splitter = new RecursiveCharacterTextSplitter({
             chunkSize: 1000,
             chunkOverlap: 200
         })
-        const doc = splitter.createDocuments([text])
+        const doc = await splitter.createDocuments([text])
         const collectionName = `pdf-${Date.now()}`;
-        const store = await VectorStore(doc, collectionName)
+        const store = await vectorStore(doc, collectionName)
 
 
         const relevantDocs = await store.similaritySearch(state.prompt, 5);
-        const context = relevantDocs.map(d => d.pageContent).join("/n/n")
+        const context = relevantDocs.map(d => d.pageContent).join("\n\n")
 
         const llm = await getModel("pdfRAG")
 
@@ -52,11 +52,11 @@ export const pdfRAG = async (state) => {
         ]
 
 
-        const response = llm.invoke(messages)
+        const response = await llm.invoke(messages)
         await deductCredits(state.userId,"pdf")
         return {
             ...state,
-            aiResponse: response.context
+            aiResponse: response.content
         }
     }
     catch (err) {

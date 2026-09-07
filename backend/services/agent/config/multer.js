@@ -13,13 +13,13 @@ const storage=multer.diskStorage({
         cb(null,uploadDir)
     },
     filename(req,file,cb){
-        cb(null,`Date.now()-${file.originalname}`)
+        cb(null,`${Date.now()}-${file.originalname}`)
     }
 })
 // console.log(pathDir)
 const fileFilter=(req,file,cb)=>{
     if(file.mimetype=="application/pdf"
-        || file.mimetype.startsWith=="image/"
+        || file.mimetype.startsWith("image/")
     ){
         cb(null,true)
     }else{

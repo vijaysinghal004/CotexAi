@@ -7,6 +7,8 @@ import { codingAgent } from "../agents/coding.agent.js";
 import { pdfAgent } from "../agents/pdf.agent..js";
 import { pptAgent } from "../agents/ppt.agent.js";
 import { imageGenAgent } from "../agents/imageGen.agent.js";
+import { pdfRAG } from "../agents/pdfRAG.agent.js";
+import { imageAnalyzer } from "../agents/imageAnalyzer.agent.js";
 
 const workflow = new StateGraph(agentState)
 
@@ -17,6 +19,8 @@ workflow.addNode("coding", codingAgent);
 workflow.addNode("pdf", pdfAgent);
 workflow.addNode("ppt", pptAgent);
 workflow.addNode("vision", imageGenAgent);
+workflow.addNode("pdfRAG", pdfRAG);
+workflow.addNode("imageAnalyzer", imageAnalyzer);
 
 workflow.addEdge("__start__", "router")
 workflow.addConditionalEdges("router", (state) => {
@@ -33,6 +37,10 @@ workflow.addConditionalEdges("router", (state) => {
             return "ppt";
         case "vision":
             return "vision";
+        case "pdfRAG":
+            return "pdfRAG";
+        case "imageAnalyzer":
+            return "imageAnalyzer";
         default:
             return "chat"
     }
@@ -42,15 +50,19 @@ workflow.addConditionalEdges("router", (state) => {
     coding: "coding",
     pdf: "pdf",
     ppt: "ppt",
-    vision: "vision"
+    vision: "vision",
+    pdfRAG:"pdfRAG",
+    imageAnalyzer:"imageAnalyzer"
 })
 
 
-workflow.addEdge("search","chat");
-workflow.addEdge("chat","__end__");
-workflow.addEdge("coding","__end__")
-workflow.addEdge("ppt","__end__")
-workflow.addEdge("pdf","__end__")
-workflow.addEdge("vision","__end__")
+workflow.addEdge("search", "chat");
+workflow.addEdge("chat", "__end__");
+workflow.addEdge("coding", "__end__")
+workflow.addEdge("ppt", "__end__")
+workflow.addEdge("pdf", "__end__")
+workflow.addEdge("vision", "__end__")
+workflow.addEdge("pdfRAG", "__end__")
+workflow.addEdge("imageAnalyzer", "__end__")
 
-export const graph=workflow.compile()
+export const graph = workflow.compile()

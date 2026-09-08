@@ -1,7 +1,14 @@
+import { checkAgentLimits } from "../config/agentlimit.js";
 import { getModel } from "../config/llmModel.js"
 import { deductCredits } from "../utils/deductCredits.js";
 
 export const codingAgent = async (state) => {
+
+    try{
+
+
+            await checkAgentLimits(state.userId,"coding");
+
     const intentLlm = await getModel("intent");
     const llm = await getModel("coding");
 
@@ -164,4 +171,14 @@ console.log("CLEAN JSON:", content);
     }
 
 
+    }catch(err){
+
+    
+      return {
+      ...state,
+      aiResponse: err?.data?.message || `❌ Failed to generate and analysis code.`,
+           artifacts:[]
+    }
+
+    }
 }

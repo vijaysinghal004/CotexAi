@@ -12,6 +12,15 @@ app.use(express.json());
 
 
 app.use("/",router);
+
+app.use((err,req,res,next)=>{
+    console.log(err);
+    if(err.status){
+        return res.status(err.status).json(err.data)
+    }
+        return res.status(err.status).json({message:`agent error ${err}`})
+
+})
 app.get("/",(req,res)=>{
     res.send("Agent server is running")
 })

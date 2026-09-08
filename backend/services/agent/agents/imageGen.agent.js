@@ -3,9 +3,11 @@ import axios from "axios"
 import { uploadToS3 } from "../utils/uploadToS3.js";
 import { getFroms3 } from "../utils/getFromS3.js";
 import { deductCredits } from "../utils/deductCredits.js";
+import { checkAgentLimits } from "../config/agentlimit.js";
 
 export const imageGenAgent = async (state) => {
     try{
+              await checkAgentLimits(state.userId,"image");
     const llm = await getModel("image");
     const res = await llm.invoke(`
     You are an elite AI image prompt engineer.
@@ -73,9 +75,13 @@ export const imageGenAgent = async (state) => {
 };
     }catch(err){
         console.log(err);
-      return {
-        ...state,
-        aiResponse:`❌ Failed to generate image .`
-      }   
+      // return {
+      //   ...state,
+      //   aiResponse:`❌ Failed to generate image .`
+      // }   
+        return {
+      ...state,
+      aiResponse: err?.data?.message || `❌ Failed to generate image.`
+    }
     }
 }

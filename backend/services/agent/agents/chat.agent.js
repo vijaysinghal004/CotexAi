@@ -2,9 +2,12 @@ import { AIMessage, HumanMessage, SystemMessage } from "@langchain/core/messages
 import { getModel } from "../config/llmModel.js"
 import { getMemory } from "../config/memeory.js";
 import { deductCredits } from "../utils/deductCredits.js";
+import { checkAgentLimits } from "../config/agentlimit.js";
 
 export const chatAgent = async (state) => {
     try {
+
+        await checkAgentLimits(state.userId,"chat");
         const llm = await getModel("chat")
 
         console.log(state?.conversationId);
@@ -80,9 +83,14 @@ Formatting:
 
 
     } catch (err) {
-        return {
-            ...state,
-            aiResponse: "Failed to generate Response"
-        }
+        // return {
+        //     ...state,
+        //     aiResponse: "Failed to generate Response"
+        // }
+          return {
+      ...state,
+      aiResponse: err?.data?.message || `❌ Failed to generate chat.`
+    }
+        
     }
 } 

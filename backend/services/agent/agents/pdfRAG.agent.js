@@ -5,9 +5,11 @@ import { getModel } from "../config/llmModel.js";
 import { HumanMessage, SystemMessage } from "@langchain/core/messages";
 import { deductCredits } from "../utils/deductCredits.js";
 import { vectorStore } from "../config/vectorDB.js";
+import { checkAgentLimits } from "../config/agentlimit.js";
 
 export const pdfRAG = async (state) => {
     try {
+                await checkAgentLimits(state.userId,"pdf");
         const buffer = fs.readFileSync(state.file.path);
         const pdf = new PDFParse({
             data: buffer
@@ -61,10 +63,15 @@ export const pdfRAG = async (state) => {
     }
     catch (err) {
         console.log(err);
-        return {
-            ...state,
-            aiResponse: "Failed to Analyze pdf"
-        }
+        // return {
+        //     ...state,
+        //     aiResponse: "Failed to Analyze pdf"
+        // }
+
+          return {
+      ...state,
+      aiResponse: err?.data?.message || `❌ Failed to Analysis PDF.`
+    }
     } finally {
         fs.unlinkSync(state.file.path)
     }
